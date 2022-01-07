@@ -1,0 +1,5 @@
+name: faas
+runtime: nodejs
+description: A minimal AWS TypeScript Pulumi program
+cloud-aws:
+  useFargate: true
