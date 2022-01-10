@@ -1,3 +1,4 @@
+import * as pulumi from "@pulumi/pulumi";
 import * as awsx from "@pulumi/awsx";
 
 export type IntegrationResponseT = {
@@ -11,5 +12,5 @@ export type CallbackT<E> = (event: E) => Promise<IntegrationResponseT> | void
 export type SupportedRouteT = awsx.apigateway.Route;
 
 export interface RoutableResource {
-    route: SupportedRouteT;
+    route: pulumi.Input<SupportedRouteT>;
 }

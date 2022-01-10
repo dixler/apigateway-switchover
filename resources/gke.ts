@@ -3,6 +3,8 @@ import * as pulumi from "@pulumi/pulumi";
 import * as gcp from "@pulumi/gcp";
 import * as awsx from "@pulumi/awsx";
 
+import * as gc from "@pulumi/google-native";
+
 import {CallbackT, RoutableResource} from "./types";
 
 
@@ -12,11 +14,13 @@ export class GKEStrategy<E> extends pulumi.ComponentResource implements Routable
         super('xbow:gke:GKEStrategy', name, args, opts)
 
         // Create a GKE cluster
-        const cluster = new gcp.container.Cluster(name, {
-            project: 'pulumi-development', // TODO fix this
+        const cluster = new gc.container.v1.Cluster(name, {
+            project: "pulumi-development",
             location: "us-west1",
-            initialNodeCount: 1,
-        });
+            autopilot: {
+                enabled: true,
+            },
+        })
 
         // Export the Cluster name
         const clusterName = cluster.name;

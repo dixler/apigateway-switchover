@@ -19,26 +19,28 @@ async function getStack() {
 }
 getStack.currentProgram = async () => pulumiProgram("LAMBDA")
 
-async function commandHandler(cmd: string) {
+type CommandString = "exit" | "lambda" | "ec2" | "k8s"
+
+async function commandHandler(cmd: CommandString) {
     if (cmd === "exit") {
         const stack = await getStack();
-        console.log('destroying stack...')
+        console.log("destroying stack...")
         await stack.destroy();
-        console.log('done')
+        console.log("done")
         process.exit()
     }
     else if (cmd === "lambda") {
-        console.log('strategy: lambda')
+        console.log("strategy: lambda")
         getStack.currentProgram = async () => pulumiProgram("LAMBDA")
     }
     else if (cmd === "ec2") {
-        console.log('strategy: ec2')
+        console.log("strategy: ec2")
         getStack.currentProgram = async () => pulumiProgram("EC2")
     }
     else if (cmd === "k8s") {
-        console.log('[skipping unimplemented]')
+        console.log("[skipping unimplemented]")
         return
-        console.log('strategy: k8s')
+        console.log("strategy: k8s")
         getStack.currentProgram = async () => pulumiProgram("K8S")
     }
     else {
@@ -46,18 +48,18 @@ async function commandHandler(cmd: string) {
         return;
     }
     const stack = await getStack();
-    console.log('deploying stack...')
+    console.log("deploying stack...")
     await stack.up({ onOutput: console.info })
-    console.log('done')
+    console.log("done")
 }
 
 async function main() {
     let input = "";
     console.log("type 'exit' to exit the program:")
-    process.stdin.on('data', async data => {
+    process.stdin.on("data", async data => {
         process.stdin.pause();
         input = data.toString().trim();
-        await commandHandler(input);
+        await commandHandler(input as CommandString);
         process.stdin.resume()
     });
 }
